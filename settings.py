@@ -53,6 +53,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # CHAPTER-9 DEPLOY TO PRODUCTION
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -83,10 +84,18 @@ TEMPLATES = [
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
 
+# CHAPTER -9 DEPLOY TO PRODUCTION
+
+# Heroku: Update database configuration from $DATABASE_URL.
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+
+
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# Chapter-2 DO NOT TOUCH THIS FILE
+# CHAPTER -2 DO NOT TOUCH THIS FILE
 
 DATABASES = {
     'default': {
@@ -133,4 +142,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+# CHAPTER-9 DEPLOY TO PRODUCTION
+# The absolute path to the directory where collectstatic will collect static files for deployment.
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 STATIC_URL = '/static/'
+
+# CHAPTER-9 DEPLOY TO PRODUCTION
+# Simplified static file serving.
+# https://warehouse.python.org/project/whitenoise/
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
